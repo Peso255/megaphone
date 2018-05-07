@@ -15,8 +15,7 @@
     <hr>
     <p>Are you sure you would like to delete this conversation with <%= convo.number %>?</p>
     <!-- <button type="delete_convo" class="btn btn-danger">Delete</button> -->
-    <form action="/messages/deleteAction/<%= convo.number %>" method="POST">
-        <!-- <label name="id"></label> -->
+    <form action="/messages/delete/<%= convo.id %>" method="POST">
         <input type="text" name="id" value="<%= convo.id %>" hidden>
         <button type="submit" class="btn btn-danger">Delete</button>
     </form>

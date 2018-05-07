@@ -65,7 +65,7 @@ const createNewConversationWithMessage = async (body, from , to, usSender) => {
   });
 };
 
-const deleteMessage=async(id, to)=>{
+const deleteMessage=async(id)=>{
   Conversation.remove({_id:id}, (err) => {
     if (err) {
       console.log(err);

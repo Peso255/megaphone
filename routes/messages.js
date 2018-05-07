@@ -6,35 +6,39 @@ const messageDB = require('../public/javascripts/message-db');
 
 const PHONE_NUMBER = process.env.PHONE_NUMBER;
 
+router.get('/receive', function(req, res) {
+  res.redirect('/messages');
+});
+
 /* Index route. Shows all conversations */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   // res.render('index', { title: 'Messages' });
   messageDB.getAllConversations( allConvos => {
     res.render('messages/index', {allConvos: allConvos, title: "All Conversations"})
   });
 });
 
-router.get('/new', function(req, res, next) {
+router.get('/new', function(req, res) {
   res.render('messages/new', { title: 'Create New Message' });
 });
 
-router.get('/new/error', function(req, res, next) {
+router.get('/new/error', function(req, res) {
   res.render('messages/new', { title: 'Create New Message', error: 'Invalid number or no message. Try again.' });
 });
 
-router.get('/deleted', function(req, res, next) {
+router.get('/deleted', function(req, res) {
   messageDB.getAllConversations( allConvos => {
     res.render('messages/index', {allConvos: allConvos, title: "All Conversations", error: 'Conversation deleted.'})
   });
 });
 
-router.get('/error', function(req, res, next) {
+router.get('/error', function(req, res) {
   messageDB.getAllConversations( allConvos => {
     res.render('messages/index', {allConvos: allConvos, title: "All Conversations", error: 'Input error occurred.'})
   });
 });
 
-router.get('/delete/:id', function(req, res, next) {
+router.get('/delete/:id', function(req, res) {
   messageDB.getConversationById(req.params.id, convo => {
     if (convo) {
       res.render('messages/delete', { title: 'Confirm Delete' , convo:convo});
@@ -43,11 +47,10 @@ router.get('/delete/:id', function(req, res, next) {
       res.redirect('/messages');
     }
   });
-  // res.render('messages/delete', { title: 'Delete Message?' , id:req.params.id});
 });
 
 /* Show route. Shows one conversations with id */
-router.get('/:id', function(req, res, next) {
+router.get('/:id', function(req, res) {
   messageDB.getConversationById(req.params.id, convo => {
     if (convo) {
       res.render('messages/show', {title: 'Conversation with'+convo.number, convo: convo});
@@ -58,7 +61,7 @@ router.get('/:id', function(req, res, next) {
   });
 });
 
-router.post('/send', function(req, res, next) {
+router.post('/send', function(req, res) {
   const message = req.body.message;
   const number = req.body.number.split(", ");
   if (!validator.validateBatch(number) || !validator.validateBody(message)) {
@@ -74,20 +77,27 @@ router.post('/send', function(req, res, next) {
 
 // Receive text messages
 router.post('/receive', function(req, res) {
-  console.log(req.body.From + " - " + req.body.Body);
-  messageDB.createMessage(req.body.Body, req.body.From, PHONE_NUMBER, false);
-  res.end();
+  if (req.body.AccountSid == process.env.ACCOUNT_SID) {
+    console.log(req.body.From + " - " + req.body.Body);
+    messageDB.createMessage(req.body.Body, req.body.From, PHONE_NUMBER, false);
+    res.sendStatus(200);
+    res.send("200 OK");
+    res.end();
+  } else {
+    res.sendStatus(400);
+    res.send("400 Invalid SID");
+    res.end();
+  }
 });
 
 /* Delete convo */
-router.post('/deleteAction/:id', function(req, res, next) {
-  // TODO implement
-  messageDB.deleteMessage(req.body.id, PHONE_NUMBER);
+router.post('/delete/:id', function(req, res) {
+  messageDB.deleteMessage(req.body.id);
   res.redirect('/messages/deleted');
 });
 
 /* Process replies */
-router.post('/send/:id', function(req, res, next) {
+router.post('/send/:id', function(req, res) {
   const message = req.body.message;
   messageDB.getNumberById(req.params.id, number => {
     if (!number || !validator.validateBody(message)) {
