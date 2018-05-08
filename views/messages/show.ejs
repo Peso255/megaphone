@@ -24,11 +24,11 @@
   $(function () {
     var socket = io();
     socket.on('notify', function(msg){
-      console.log('notified by server: ', msg);
+      console.log('Notifier: ', msg);
       // $('#messages').append($('<li>').text(msg));
     });
     socket.on('update conversation', function(msg){
-      console.log('conversation was updated: ', msg);
+      console.log('New message: ', msg);
 
       const row = document.createElement('div');
       $(row).addClass("row");
@@ -39,10 +39,10 @@
       col.appendChild(d);
       if (msg.sent) {
         $(d).addClass("sent float-right");
-        jQuery('<a/>', {class: 'grey',text: msg.body, 'data-placement':'left', "data-toggle": "tooltip", href:"#", title:msg.date}).appendTo(d);
+        jQuery('<a/>', {text: msg.body, 'data-placement':'left', "data-toggle": "tooltip", href:"#", title:msg.date}).appendTo(d);
       } else {
         $(d).addClass("received float-left");
-        jQuery('<a/>', {class: 'grey',text: msg.body, 'data-placement':'left', "data-toggle": "tooltip", href:"#", title:msg.date}).appendTo(d);
+        jQuery('<a/>', {text: msg.body, 'data-placement':'left', "data-toggle": "tooltip", href:"#", title:msg.date}).appendTo(d);
       }
       $('#message-container').append(row);
     });

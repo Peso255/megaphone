@@ -3,6 +3,7 @@ const router = express.Router();
 const sendMessage = require('../public/javascripts/send-message');
 const validator = require('../public/javascripts/validate');
 const messageDB = require('../public/javascripts/message-db');
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const PHONE_NUMBER = process.env.PHONE_NUMBER;
 
@@ -53,7 +54,7 @@ router.get('/delete/:id', function(req, res) {
 router.get('/:id', function(req, res) {
   messageDB.getConversationById(req.params.id, convo => {
     if (convo) {
-      res.render('messages/show', {title: 'Conversation with'+convo.number, convo: convo});
+      res.render('messages/show', {title: 'Conversation with '+convo.number, convo: convo});
     } else {
       // nothing found with :id?
       res.redirect('/messages');
@@ -78,15 +79,13 @@ router.post('/send', function(req, res) {
 // Receive text messages
 router.post('/receive', function(req, res) {
   if (req.body.AccountSid == process.env.ACCOUNT_SID) {
-    console.log(req.body.From + " - " + req.body.Body);
     messageDB.createMessage(req.body.Body, req.body.From, PHONE_NUMBER, false);
-    res.sendStatus(200);
-    res.send("200 OK");
-    res.end();
+    let twiml = new MessagingResponse();
+    res.writeHead(200, {'Content-Type': 'text/xml'});
+    res.end(twiml.toString());
   } else {
     res.sendStatus(400);
-    res.send("400 Invalid SID");
-    res.end();
+    res.end("Invalid SID");
   }
 });
 

@@ -26,7 +26,7 @@ const createMessage = async (body, from, to, usSender) => {
           if (err) {
             console.log(err);  // TODO handle error
           } else {
-            console.log("updated conversation:", updatedConvo);
+            console.log("New message:", updatedConvo);
             // notify client that conversation was updated
             // io.on('connection', function(socket) {
             io.emit('update conversation', newMessage);
@@ -94,7 +94,7 @@ const getConversationById = (id, callback) => {
     } else if (!convo) {
       return callback(null);
     } else {
-      // todo what if nothing found with that ID?
+      // Not founds should be handled by the calling function.
       return callback(convo);
     }
   });
@@ -129,8 +129,8 @@ const getNumberById = (id, callback) => {
 const ioListen = function(server) {
   io = socketio.listen(server);
   io.on('connection', function(socket) {
-    console.log('a user connected');
-    socket.emit('notify', 'server acknowledges user connected');
+    console.log('Client connected');
+    socket.emit('notify', 'Client connected');
   });
 };
 
