@@ -21,9 +21,9 @@ router.get('/conversations/id/:id', function(req, res) {
 
 /* GET conversation history by phone number */
 router.get('/conversations/number/:number', function(req, res) {
-  if (!ipCheck.checkIP(req.headers["X-Forwarded-For"])) {
+  if (!ipCheck.checkIP(req.header('x-forwarded-for'))) {
     res.sendStatus(401);
-    console.log(req.headers["X-Forwarded-For"]);
+    console.log(req.header('x-forwarded-for'));
   } else {
     messageDB.getConversationByNumber(req.params.number, convo => {
       if (convo) {
