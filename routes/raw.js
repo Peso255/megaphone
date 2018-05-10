@@ -23,6 +23,7 @@ router.get('/conversations/id/:id', function(req, res) {
 router.get('/conversations/number/:number', function(req, res) {
   if (!ipCheck.checkIP(req.headers["X-Forwarded-For"])) {
     res.sendStatus(401);
+    console.log(req.headers["X-Forwarded-For"]);
   } else {
     messageDB.getConversationByNumber(req.params.number, convo => {
       if (convo) {
