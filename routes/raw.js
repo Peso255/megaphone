@@ -20,17 +20,13 @@ router.get('/conversations/id/:id', function(req, res) {
 
 /* GET conversation history by phone number */
 router.get('/conversations/number/:number', function(req, res) {
-  if (req.headers['X-Forwarded-For'] != "128.250.0.221") {
-    res.sendStatus(401);
-  } else {
-    messageDB.getConversationByNumber(req.params.number, convo => {
-      if (convo) {
-        res.send(convo);
-      } else {
-        res.sendStatus(404);
-      }
-    });
-  }
+  messageDB.getConversationByNumber(req.params.number, convo => {
+    if (convo) {
+      res.send(convo);
+    } else {
+      res.sendStatus(404);
+    }
+  });
 });
 
 /* GET phone number from UID */
