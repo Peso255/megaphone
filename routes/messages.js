@@ -3,7 +3,6 @@ const router = express.Router();
 const sendMessage = require('../public/javascripts/send-message');
 const validator = require('../public/javascripts/validate');
 const messageDB = require('../public/javascripts/message-db');
-const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const PHONE_NUMBER = process.env.PHONE_NUMBER;
 
@@ -73,19 +72,6 @@ router.post('/send', function(req, res) {
       messageDB.createMessage(message, PHONE_NUMBER, number[i], true);
     }
     res.redirect('/messages');
-  }
-});
-
-// Receive text messages
-router.post('/receive', function(req, res) {
-  if (req.body.AccountSid == process.env.ACCOUNT_SID) {
-    messageDB.createMessage(req.body.Body, req.body.From, PHONE_NUMBER, false);
-    let twiml = new MessagingResponse();
-    res.writeHead(200, {'Content-Type': 'text/xml'});
-    res.end(twiml.toString());
-  } else {
-    res.sendStatus(400);
-    res.end("Invalid SID");
   }
 });
 
