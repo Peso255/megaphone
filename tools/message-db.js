@@ -1,5 +1,5 @@
 const socketio =  require('socket.io');
-const Conversation = require('../../models/conversation');
+const Conversation = require('../models/conversation');
 
 let io;
 

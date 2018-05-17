@@ -4,7 +4,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');  // for database
-const ipCheck = require('./routes/ipcheck.js'); // for IP ACL
+const ipCheck = require('./tools/ipcheck.js'); // for IP ACL
 
 // require routes
 const indexRouter = require('./routes/index');
@@ -32,12 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Heroku IP ACL
 app.use(function (req, res, next) {
-  if ((typeof req.header('x-forwarded-for') !== 'undefined' &&
-      ipCheck.checkIP(req.header('x-forwarded-for').split(", ")[1])) ||
-      req.url == "/receive") {
+  if (typeof req.header('x-forwarded-for') !== 'undefined' &&
+      ipCheck.checkIP(req.header('x-forwarded-for').split(", ")[1])) {
     next();
   } else {
-    res.sendStatus(403);
+    next(createError(403));
   }
 });
 

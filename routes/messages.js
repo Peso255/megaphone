@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const sendMessage = require('../public/javascripts/send-message');
-const validator = require('../public/javascripts/validate');
-const messageDB = require('../public/javascripts/message-db');
+const sendMessage = require('../tools/send-message');
+const validator = require('../tools/validate');
+const messageDB = require('../tools/message-db');
 
 const PHONE_NUMBER = process.env.PHONE_NUMBER;
 

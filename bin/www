@@ -22,7 +22,7 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /* TODO socket stuff */
-const messageDB = require('../public/javascripts/message-db');
+const messageDB = require('../tools/message-db');
 messageDB.ioListen(server);
 // const io = require('socket.io')(server);
 // io.on('connection', function(socket){

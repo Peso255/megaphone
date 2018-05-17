@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const messageDB = require('../public/javascripts/message-db');
+const messageDB = require('../tools/message-db');
 const UIDminlength = 12;
 
 /* GET conversation history by UID */
